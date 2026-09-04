@@ -13,6 +13,8 @@ import {
   AlertCircle,
   ArrowUpRight,
   RefreshCw,
+  Loader2,
+  Activity,
 } from "lucide-react";
 import {
   AreaChart,
@@ -66,6 +68,7 @@ export default function AdminDashboardMain() {
   const [collapsed, setCollapsed] = useState<boolean>(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
+  const [initialTimer, setInitialTimer] = useState<boolean>(true);
 
   // Metrics State
   const [totalAppointments, setTotalAppointments] = useState<number>(0);
@@ -85,6 +88,11 @@ export default function AdminDashboardMain() {
       return;
     }
 
+    // 3 Seconds mandatory initial animated loader
+    const timer = setTimeout(() => {
+      setInitialTimer(false);
+    }, 1500);
+
     fetchDashboardMetrics();
 
     const appointmentSub = supabase
@@ -102,6 +110,7 @@ export default function AdminDashboardMain() {
       .subscribe();
 
     return () => {
+      clearTimeout(timer);
       supabase.removeChannel(appointmentSub);
       supabase.removeChannel(messageSub);
     };
@@ -213,6 +222,35 @@ export default function AdminDashboardMain() {
     } finally {
       setLoading(false);
     }
+  }
+
+  // Show Animated Loader screen for the first 3 seconds
+  if (initialTimer) {
+    return (
+      <main className="min-h-screen bg-[#f4fbfa] text-[#12383a]">
+        <AdminSidebar
+          collapsed={collapsed}
+          setCollapsed={setCollapsed}
+          mobileMenuOpen={mobileMenuOpen}
+          setMobileMenuOpen={setMobileMenuOpen}
+        />
+        <div className={`${collapsed ? "md:pl-20" : "md:pl-64"} min-h-screen transition-all duration-300 flex flex-col items-center justify-center p-6`}>
+          <div className="flex flex-col items-center gap-4 bg-white p-8 sm:p-12 rounded-3xl border border-[#dcefed] shadow-sm max-w-md w-full text-center">
+            <div className="relative grid place-items-center">
+              <div className="size-16 rounded-full border-4 border-[#e5f8f6] border-t-[#00a7a0] animate-spin" />
+              <Activity className="size-7 text-[#00a7a0] absolute" />
+            </div>
+            <div>
+              <h2 className="text-xl font-bold text-[#12383a]">Dr. Care </h2>
+              <p className="text-xs text-[#789a9a] mt-1">Syncing real-time clinic data & metrics...</p>
+            </div>
+            <div className="w-full bg-[#e5f8f6] h-1.5 rounded-full overflow-hidden mt-2">
+              <div className="bg-[#00a7a0] h-full animate-[pulse_1s_infinite] w-3/4 rounded-full" />
+            </div>
+          </div>
+        </div>
+      </main>
+    );
   }
 
   return (
@@ -454,7 +492,7 @@ export default function AdminDashboardMain() {
                     <th className="px-5 py-3.5 font-medium">Type</th>
                     <th className="px-5 py-3.5 font-medium">Patient / User</th>
                     <th className="px-5 py-3.5 font-medium">Details</th>
-                    <th className="px-5 py-3.5 font-medium">Status</th>
+                    <th className="px-5 py-[#3.5] font-medium">Status</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#edf5f4]">
