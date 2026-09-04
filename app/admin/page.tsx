@@ -30,7 +30,7 @@ import {
   Legend,
 } from "recharts";
 import { createClient } from "@supabase/supabase-js";
-import AdminSidebar from "./AdminSidebar"; // Import Path Adjust Karsakte Hain
+import AdminSidebar from "./AdminSidebar";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
@@ -121,8 +121,15 @@ export default function AdminDashboardMain() {
       setTotalAppointments(appCount || 0);
       setTotalMessages(msgCount || 0);
 
-      setPendingAppointments(appointments.filter((a) => a.status === "Pending").length);
-      setPendingMessages(messages.filter((m) => m.status === "Pending" || !m.status).length);
+      // Pending Appointments (Case-insensitive & Null checks)
+      setPendingAppointments(
+        appointments.filter((a) => a.status === "Pending" || a.status === "pending" || !a.status).length
+      );
+
+      // Pending Messages (Case-insensitive & Null checks according to Contact Messages DB)
+      setPendingMessages(
+        messages.filter((m) => m.status === "Pending" || m.status === "pending" || !m.status).length
+      );
 
       // 1. Process Recent Activities
       const formattedApps: RecentActivity[] = appointments.slice(0, 3).map((a) => ({
@@ -143,7 +150,11 @@ export default function AdminDashboardMain() {
         date: m.created_at || new Date().toISOString(),
       }));
 
-      setRecentActivities([...formattedApps, ...formattedMsgs].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).slice(0, 5));
+      setRecentActivities(
+        [...formattedApps, ...formattedMsgs]
+          .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+          .slice(0, 5)
+      );
 
       // 2. Compute Dynamic Status Distribution
       const statusCounts = appointments.reduce((acc: Record<string, number>, item) => {
@@ -251,7 +262,7 @@ export default function AdminDashboardMain() {
                 <p className="text-xs font-semibold uppercase tracking-wider text-[#789a9a]">Total Appointments</p>
                 <h3 className="text-2xl font-bold mt-2 text-[#12383a]">{totalAppointments}</h3>
                 <p className="text-xs text-emerald-600 mt-2 flex items-center gap-1 font-medium">
-                  <TrendingUp size={14} /> Live database state
+                  <TrendingUp size={14} /> Live state
                 </p>
               </div>
               <div className="p-3 bg-[#e5f8f6] text-[#008e89] rounded-xl">
@@ -264,7 +275,7 @@ export default function AdminDashboardMain() {
                 <p className="text-xs font-semibold uppercase tracking-wider text-[#789a9a]">Contact Messages</p>
                 <h3 className="text-2xl font-bold mt-2 text-[#12383a]">{totalMessages}</h3>
                 <p className="text-xs text-emerald-600 mt-2 flex items-center gap-1 font-medium">
-                  <TrendingUp size={14} /> Live database state
+                  <TrendingUp size={14} /> Live state
                 </p>
               </div>
               <div className="p-3 bg-blue-50 text-blue-600 rounded-xl">

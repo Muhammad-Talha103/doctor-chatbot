@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowLeft, LockKeyhole, Stethoscope, ShieldCheck } from 'lucide-react'
 
-const ADMIN_PIN = '12345678'
+const ADMIN_PIN = '54397485'
 
 export default function AdminLoginPage() {
   const [pin, setPin] = useState(Array(8).fill(''))
@@ -130,7 +130,7 @@ export default function AdminLoginPage() {
             Sign In
           </button>
 
-          <p className="mt-5 text-center text-xs text-[#789a9a]">Demo access PIN: 12345678</p>
+    
         </motion.div>
       </div>
 
