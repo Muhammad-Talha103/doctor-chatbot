@@ -306,9 +306,7 @@ useEffect(() => {
             {/* MESSAGES BODY */}
             <div className="flex-1 space-y-4 overflow-y-auto p-5">
               <div className="max-w-[85%] rounded-2xl rounded-tl-sm bg-emerald-50 p-4 text-sm leading-6 text-slate-800 dark:bg-slate-800 dark:text-slate-100">
-                Hello! Main Dr. Alex Morgan ka AI Assistant hu. Aap clinic
-                timings, fees, ya appointment booking ke hawale se koi bhi sawal
-                pooch sakte hain.
+              Hello! I am Dr. Alex Morgan's AI Assistant. You can ask me anything about the doctor, clinic timings, fees, treatments, or appointment booking.
               </div>
 
               {messages.map((item, i) => (
