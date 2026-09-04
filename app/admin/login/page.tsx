@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowLeft, LockKeyhole, Stethoscope, ShieldCheck } from 'lucide-react'
 
-const ADMIN_PIN = '54397485'
+const ADMIN_PIN = process.env.NEXT_PUBLIC_ADMIN_PASSWORD;
 
 export default function AdminLoginPage() {
   const [pin, setPin] = useState(Array(8).fill(''))
